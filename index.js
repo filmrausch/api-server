@@ -27,7 +27,7 @@ app.post('/', withAuth, (req, res) => {
   data = JSON.stringify(req.body)
   fs.writeFile('./movies.json', data, (err) => {
     if (err) {
-      res.status(400).send(`POST encountered an error: ${e}`)
+      res.status(400).send(`POST encountered an error: ${err}`)
     } else {
       res.status(200).send('POST was successful')
     }
