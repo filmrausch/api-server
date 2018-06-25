@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "dev": "node ./node_modules/nodemon/bin/nodemon.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Mark Kvetny",
@@ -15,5 +16,7 @@
     "express": "^4.16.3",
     "express-basic-auth": "^1.1.5"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  }
 }
