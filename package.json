@@ -11,7 +11,6 @@
   "author": "Mark Kvetny",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "express-basic-auth": "^1.1.5"

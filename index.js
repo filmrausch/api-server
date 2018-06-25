@@ -2,11 +2,10 @@ require('dotenv').config()
 const PORT = process.env.PORT || 5000
 
 const express = require('express')
-const bodyParser = require('body-parser')
 const basicAuth = require('express-basic-auth')
 
 const app = express()
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 const withAuth = basicAuth({
   authorizer: (username, password) => 
@@ -15,11 +14,11 @@ const withAuth = basicAuth({
 })
 
 app.get('/', (req, res) => {
-  console.log('get got')
+  res.status(200).send('get got')
 })
 
 app.post('/', withAuth, (req, res) => {
-  console.log(req.body)
+  res.status(200).send('post recieved')
 })
 
 app.listen(PORT, () => {
