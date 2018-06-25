@@ -14,22 +14,24 @@ const withAuth = basicAuth({
 })
 
 app.get('/', (req, res) => {
-  res.status(200).send('get got')
+  fs.readFile('./movies.json', (err, data) => {
+    if (err) {
+      res.status(200).send([])
+    } else {
+      res.status(200).send(JSON.parse(data))
+    }
+  })
 })
 
 app.post('/', withAuth, (req, res) => {
-
-  try {
-    data = JSON.stringify(req.body)
-    fs.writeFile('./movies.json', data, (err) => {
-      if (err) throw err
+  data = JSON.stringify(req.body)
+  fs.writeFile('./movies.json', data, (err) => {
+    if (err) {
+      res.status(400).send(`POST encountered an error: ${e}`)
+    } else {
       res.status(200).send('POST was successful')
-    })
-  }
-  catch (e) {
-    res.status(400).send(`POST encountered an error: ${e}`)
-  }
-
+    }
+  })
 })
 
 app.listen(PORT, () => {
