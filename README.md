@@ -13,5 +13,5 @@ It should look like this:
   PASS=your_password
   ```  
   
-3. To start the server for development, run ```npm run dev```. This will start [nodemon](https://github.com/remy/nodemon) which monitors any file changes and automatically restarts the server (very handy for development). To start the server for production, run ```npm start```.  
-Both production and development server will listen on ```port 5000``` by default.
+3. To start the server for development, run ```npm run dev```. This will start [nodemon](https://github.com/remy/nodemon), which monitors any file changes and automatically restarts the server (very handy for development). To start the server for production, run ```npm start```.  
+Both the production and the development server will listen on ```port 5000``` by default.
