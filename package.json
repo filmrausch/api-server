@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node ./node_modules/nodemon/bin/nodemon.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Mark Kvetny",
   "license": "ISC",
