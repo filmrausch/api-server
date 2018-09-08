@@ -9,8 +9,8 @@ app.use(express.json())
 
 const withAuth = basicAuth({
   authorizer: (username, password) =>
-    username === process.env.USER &&
-    password === process.env.PASS
+    username === process.env.API_USER &&
+    password === process.env.API_PASS
 })
 
 app.get('/', (req, res) => {
