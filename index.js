@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', withAuth, (req, res) => {
-  data = JSON.stringify(req.body)
+  const data = JSON.stringify(req.body)
   fs.writeFile('./movies.json', data, (err) => {
     if (err) {
       res.status(400).send(`POST encountered an error: ${err}`)
