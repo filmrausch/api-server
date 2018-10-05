@@ -2,8 +2,13 @@ require('dotenv').config()
 const express = require('express')
 const basicAuth = require('express-basic-auth')
 const fs = require('fs')
+const child_process = require('child_process')
 const cors = require('cors')
-const { exec } = require('child_process')
+const util = require('util')
+
+const readFile = util.promisify(fs.readFile)
+const writeFile = util.promisify(fs.writeFile)
+const exec = util.promisify(child_process.exec)
 
 const PORT = process.env.PORT || 5000
 const app = express()
@@ -16,41 +21,30 @@ const withAuth = basicAuth({
     password === process.env.API_PASS
 })
 
-app.get('/', (_, res) => {
-  fs.readFile('./movies.json', (err, data) => {
-    if (err) {
-      res.status(200).send([])
-    } else {
-      res.status(200).send(JSON.parse(data))
-    }
-  })
+app.get('/', async (_, res) => {
+
+  try {
+    const data = await readFile('./movies.json')
+    res.status(200).send(JSON.parse(data))
+  } catch (error) {
+    res.status(200).send([])
+  }
 })
 
-app.post('/', withAuth, (req, res) => {
+app.post('/', withAuth, async (req, res) => {
+
   const data = JSON.stringify(req.body)
-  fs.writeFile('./movies.json', data, (err) => {
-    if (err) {
-      res.status(400).send(`POST encountered an error: ${err}`)
+  
+  try {
+    await writeFile('./movies.json', data)
+    if (process.env.POSTHOOK) {
+      await exec(process.env.POSTHOOK)
     }
-    else {
+    res.status(200).send(`POST successful!`)
+  } catch (error) {
+    res.status(400).send(`An error occured: ${error}`)
+  }
 
-      if (process.env.POSTHOOK) {
-        const shellPath = process.env.POSTHOOK
-        exec(shellPath, (err) => {
-          if (err) {
-            res.status(400).send(`POSTHOOK encountered an error: ${err}`)
-          } else {
-            res.status(200).send('POSTHOOK was successful')
-          }
-        })
-      }
-      else {
-        res.status(200).send('POST was successful')
-      }
-
-    }
-
-  })
 })
 
 app.listen(PORT, () => {
