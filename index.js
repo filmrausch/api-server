@@ -3,6 +3,7 @@ const express = require('express')
 const basicAuth = require('express-basic-auth')
 const fs = require('fs')
 const cors = require('cors')
+const { exec } = require('child_process')
 
 const PORT = process.env.PORT || 5000
 const app = express()
@@ -15,7 +16,7 @@ const withAuth = basicAuth({
     password === process.env.API_PASS
 })
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
   fs.readFile('./movies.json', (err, data) => {
     if (err) {
       res.status(200).send([])
@@ -30,9 +31,25 @@ app.post('/', withAuth, (req, res) => {
   fs.writeFile('./movies.json', data, (err) => {
     if (err) {
       res.status(400).send(`POST encountered an error: ${err}`)
-    } else {
-      res.status(200).send('POST was successful')
     }
+    else {
+
+      if (process.env.POSTHOOK) {
+        const shellPath = process.env.POSTHOOK
+        exec(shellPath, (err) => {
+          if (err) {
+            res.status(400).send(`POSTHOOK encountered an error: ${err}`)
+          } else {
+            res.status(200).send('POSTHOOK was successful')
+          }
+        })
+      }
+      else {
+        res.status(200).send('POST was successful')
+      }
+
+    }
+
   })
 })
 
